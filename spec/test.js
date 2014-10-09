@@ -11,6 +11,9 @@ describe('Car', function(){
   beforeEach(function(){
     // create a new myCar object each time
     myCar = new Car("BMW", "328i", 2014, "black");
+    myCar.state = "off";
+    myCar.previous_owners = [];
+    myCar.passengers = [];
   });
 
   describe('#year', function(){
@@ -74,7 +77,6 @@ describe('Car', function(){
 
   describe('#off', function(){
     it('should update the state to off', function(){
-      myCar.off();
       expect(myCar.state).to.equal("off");
     });
   });
@@ -93,26 +95,31 @@ describe('Car', function(){
     });
 
     it('should not modify the passengers array if car is off', function(){
-      myCar.off();
+      myCar.start();
       myCar.pickup("Lauren");
-      expect(myCar.passengers.length).to.equal(1);
+      myCar.pickup("Anna");
+      myCar.off();
+      myCar.pickup("Keith");
+      expect(myCar.passengers.length).to.equal(2);
     });
   });
 
   describe('#dropOff', function(){
     it('should remove passenger from the passengers array if car is on', function(){
       myCar.start();
+      myCar.pickup("Lauren");
+      myCar.pickup("Anna");
       myCar.dropoff("Anna");
-      expect(myCar.passengers.length).to.be.empty;
+      expect(myCar.passengers.length).to.equal(1);
     });
 
     it('should leave passenger in the passengers array if car is off', function(){
       myCar.start();
       myCar.pickup("Elie");
       myCar.pickup("Ilias");
-      console.log(myCar.passengers)
+      console.log(myCar.passengers);
       myCar.off();
-      myCar.dropoff("Lauren");
+      myCar.dropoff("Elie");
       expect(myCar.passengers.length).to.equal(2);
     });
   });
